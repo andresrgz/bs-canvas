@@ -6,7 +6,7 @@ type canvasFormat = [ | [@bs.as "svg"] `SVG | [@bs.as "pdf"] `PDF];
 
 [@bs.new] [@bs.module]
 external createCanvas':
-  (~width: int=?, ~height: int=?, ~type_: string=?, unit) => canvas =
+  (~width: float=?, ~height: float=?, ~type_: string=?, unit) => canvas =
   "canvas";
 let createCanvas = (~width=?, ~height=?, ~type_=?, ()) =>
   switch (type_) {
@@ -69,22 +69,23 @@ module Image = {
   [@bs.set] external srcSet: (t, string) => unit = "src";
 
   [@bs.new] [@bs.module "canvas"]
-  external createImage: (~width: int=?, ~height: int=?, unit) => t = "Image";
+  external createImage: (~width: float=?, ~height: float=?, unit) => t =
+    "Image";
 };
 
-/* TODO: Set incorrect data types instead of using ints */
+/* TODO: Set incorrect data types instead of using floats */
 module ImageData = {
   type t;
-  [@bs.get] external dataGet': t => array(int) = "data";
+  [@bs.get] external dataGet': t => array(float) = "data";
   let dataGet = t => t->dataGet' |> Array.to_list;
   [@bs.get] external height: t => int64 = "";
   [@bs.get] external width: t => int64 = "";
 
   [@bs.new] [@bs.module "canvas"]
-  external createImageData: (int, int) => t = "ImageData";
+  external createImageData: (int, float) => t = "ImageData";
 
   [@bs.new] [@bs.module "canvas"]
-  external createImageDataFromData': (array(int), int, int) => t =
+  external createImageDataFromData': (array(float), float, float) => t =
     "ImageData";
   let createImageDataFromData = (data, width, height) =>
     createImageDataFromData'(data |> Array.of_list, width, height);
@@ -121,20 +122,20 @@ module CanvasRenderingContext2D = {
   [@bs.get] external shadowBlurGet: t => float = "shadowBlur";
   [@bs.set] external shadowBlurSet: (t, float) => unit = "shadowBlur";
 
-  [@bs.get] external shadowOffsetXGet: t => int = "shadowOffsetX";
-  [@bs.set] external shadowOffsetXSet: (t, int) => unit = "shadowOffsetX";
+  [@bs.get] external shadowOffsetXGet: t => float = "shadowOffsetX";
+  [@bs.set] external shadowOffsetXSet: (t, float) => unit = "shadowOffsetX";
 
-  [@bs.get] external shadowOffsetYGet: t => int = "shadowOffsetY";
-  [@bs.set] external shadowOffsetYSet: (t, int) => unit = "shadowOffsetY";
+  [@bs.get] external shadowOffsetYGet: t => float = "shadowOffsetY";
+  [@bs.set] external shadowOffsetYSet: (t, float) => unit = "shadowOffsetY";
 
   [@bs.get] external shadowColorGet: t => string = "shadowColor";
   [@bs.set] external shadowColorSet: (t, string) => unit = "shadowColor";
 
-  [@bs.get] external lineWidthGet: t => int = "lineWidth";
-  [@bs.set] external lineWidthSet: (t, int) => unit = "lineWidth";
+  [@bs.get] external lineWidthGet: t => float = "lineWidth";
+  [@bs.set] external lineWidthSet: (t, float) => unit = "lineWidth";
 
-  [@bs.get] external lineDashOffsetGet: t => int = "lineDashOffset";
-  [@bs.set] external lineDashOffsetSet: (t, int) => unit = "lineDashOffset";
+  [@bs.get] external lineDashOffsetGet: t => float = "lineDashOffset";
+  [@bs.set] external lineDashOffsetSet: (t, float) => unit = "lineDashOffset";
 
   [@bs.get] external globalAlphaGet: t => float = "globalAlpha";
   [@bs.set] external globalAlphaSet: (t, float) => unit = "globalAlpha";
@@ -197,9 +198,9 @@ module CanvasRenderingContext2D = {
         globalCompositeOperation |> globalCompositeOperationToJs,
       );
 
-  [@bs.send] external getLineDash': t => array(int) = "";
+  [@bs.send] external getLineDash': t => array(float) = "";
   let getLineDash = t => t->getLineDash' |> Array.to_list;
-  [@bs.send] external setLineDash': (t, array(int)) => unit = "";
+  [@bs.send] external setLineDash': (t, array(float)) => unit = "";
   let setLineDash = (t, segments) =>
     t->setLineDash'(segments |> Array.of_list);
 
@@ -274,9 +275,11 @@ module CanvasRenderingContext2D = {
   external strokeStylePatternSet: (t, pattern) => unit = "strokeStyle";
 
   [@bs.send]
-  external createLinearGradient: (t, int, int, int, int) => gradient = "";
+  external createLinearGradient: (t, float, float, float, float) => gradient =
+    "";
   [@bs.send]
-  external createRadialGradient: (t, int, int, int, int, int, int) => gradient =
+  external createRadialGradient:
+    (t, float, float, float, float, float, float) => gradient =
     "";
 
   [@bs.deriving jsConverter]
@@ -335,70 +338,81 @@ module CanvasRenderingContext2D = {
   let antialiasSet = (t, antialias) =>
     t->antialiasSet'(antialias |> antialiasToJs);
 
-  [@bs.send] external clearRect: (t, int, int, int, int) => unit = "";
-  [@bs.send] external fillRect: (t, int, int, int, int) => unit = "";
-  [@bs.send] external strokeRect: (t, int, int, int, int) => unit = "";
+  [@bs.send] external clearRect: (t, float, float, float, float) => unit = "";
+  [@bs.send] external fillRect: (t, float, float, float, float) => unit = "";
+  [@bs.send] external strokeRect: (t, float, float, float, float) => unit = "";
   [@bs.send]
-  external fillText: (t, string, int, int, ~maxWidth: int=?, unit) => unit =
+  external fillText:
+    (t, string, float, float, ~maxWidth: float=?, unit) => unit =
     "";
   [@bs.send]
-  external strokeText: (t, string, int, int, ~maxWidth: int=?, unit) => unit =
+  external strokeText:
+    (t, string, float, float, ~maxWidth: float=?, unit) => unit =
     "";
   [@bs.send] external measureText: (t, string) => TextMetrics.t = "";
   [@bs.send] external beginPath: t => unit = "";
   [@bs.send] external closePath: t => unit = "";
-  [@bs.send] external moveTo: (t, int, int) => unit = "";
-  [@bs.send] external lineTo: (t, int, int) => unit = "";
-  [@bs.send] external quadraticCurveTo: (t, int, int, int, int) => unit = "";
+  [@bs.send] external moveTo: (t, float, float) => unit = "";
+  [@bs.send] external lineTo: (t, float, float) => unit = "";
   [@bs.send]
-  external bezierCurveTo: (t, int, int, int, int, int, int) => unit = "";
+  external quadraticCurveTo: (t, float, float, float, float) => unit = "";
+  [@bs.send]
+  external bezierCurveTo: (t, float, float, float, float, float, float) => unit =
+    "";
   [@bs.send]
   external arc:
-    (t, int, int, int, int, int, ~anticlockwise: bool=?, unit) => unit =
+    (t, float, float, float, float, float, ~anticlockwise: bool=?, unit) =>
+    unit =
     "";
-  [@bs.send] external arcTo: (t, int, int, int, int, int) => unit = "";
-  [@bs.send] external rect: (t, int, int, int, int) => unit = "";
+  [@bs.send]
+  external arcTo: (t, float, float, float, float, float) => unit = "";
+  [@bs.send] external rect: (t, float, float, float, float) => unit = "";
   [@bs.send] external fill: t => unit = "";
   [@bs.send] external stroke: t => unit = "";
   [@bs.send] external clip: t => unit = "";
-  [@bs.send] external isPointInPath: (t, int, int) => bool = "";
-  [@bs.send] external rotate: (t, int) => unit = "";
-  [@bs.send] external scale: (t, int, int) => unit = "";
-  [@bs.send] external translate: (t, int, int) => unit = "";
+  [@bs.send] external isPofloatInPath: (t, float, float) => bool = "";
+  [@bs.send] external rotate: (t, float) => unit = "";
+  [@bs.send] external scale: (t, float, float) => unit = "";
+  [@bs.send] external translate: (t, float, float) => unit = "";
   [@bs.send]
-  external transform: (t, int, int, int, int, int, int) => unit = "";
+  external transform: (t, float, float, float, float, float, float) => unit =
+    "";
   [@bs.send]
-  external setTransform: (t, int, int, int, int, int, int) => unit = "";
+  external setTransform: (t, float, float, float, float, float, float) => unit =
+    "";
   [@bs.send] external resetTransform: t => unit = "";
 
-  [@bs.send] external drawImage: (t, Image.t, int, int) => unit = "";
+  [@bs.send] external drawImage: (t, Image.t, float, float) => unit = "";
   [@bs.send]
-  external drawImageDst: (t, Image.t, int, int, int, int) => unit =
+  external drawImageDst: (t, Image.t, float, float, float, float) => unit =
     "drawImage";
   [@bs.send]
   external drawImageSrcDst:
-    (t, Image.t, int, int, int, int, int, int, int, int) => unit =
+    (t, Image.t, float, float, float, float, float, float, float, float) =>
+    unit =
     "drawImage";
 
-  [@bs.send] external drawCanvas: (t, canvas, int, int) => unit = "drawImage";
   [@bs.send]
-  external drawCanvasDst: (t, canvas, int, int, int, int) => unit =
+  external drawCanvas: (t, canvas, float, float) => unit = "drawImage";
+  [@bs.send]
+  external drawCanvasDst: (t, canvas, float, float, float, float) => unit =
     "drawImage";
   [@bs.send]
   external drawCanvasSrcDst:
-    (t, canvas, int, int, int, int, int, int, int, int) => unit =
+    (t, canvas, float, float, float, float, float, float, float, float) => unit =
     "drawImage";
 
-  [@bs.send] external createImageData: (t, int, int) => ImageData.t = "";
+  [@bs.send] external createImageData: (t, float, float) => ImageData.t = "";
   [@bs.send]
   external createFromImageData: (t, ImageData.t) => ImageData.t =
     "createImageData";
   [@bs.send]
-  external getImageData: (t, int, int, int, int) => ImageData.t = "";
-  [@bs.send] external putImageData: (t, ImageData.t, int, int) => unit = "";
+  external getImageData: (t, float, float, float, float) => ImageData.t = "";
+  [@bs.send]
+  external putImageData: (t, ImageData.t, float, float) => unit = "";
   [@bs.send]
   external putImageDataDirty:
-    (t, ImageData.t, int, int, int, int, int, int) => unit =
+    (t, ImageData.t, float, float, float, float, float, float) => unit =
     "";
 
   [@bs.send] external save: t => unit = "";
