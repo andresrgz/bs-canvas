@@ -61,8 +61,15 @@ let toDataURL = (canvas, ~type_=?, ~encoderOptions=?, ()) =>
 [@bs.deriving jsConverter]
 type renderingContext = [ | [@bs.as "2d"] `CanvasRenderingContext2D];
 
+/* TODO: Add image data modes */
 module Image = {
   type t;
+
+  [@bs.get] external srcGet: t => string = "src";
+  [@bs.set] external srcSet: (t, string) => unit = "src";
+
+  [@bs.new] [@bs.module "canvas"]
+  external createImage: (~width: int=?, ~height: int=?, unit) => t = "Image";
 };
 
 /* TODO: Set incorrect data types instead of using ints */
