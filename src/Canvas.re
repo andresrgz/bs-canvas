@@ -92,6 +92,18 @@ module CanvasRenderingContext2D = {
   [@bs.get] external fontGet: t => string = "font";
   [@bs.set] external fontSet: (t, string) => unit = "font";
 
+  [@bs.get] external shadowBlurGet: t => float = "shadowBlur";
+  [@bs.set] external shadowBlurSet: (t, float) => unit = "shadowBlur";
+
+  [@bs.get] external shadowOffsetXGet: t => int = "shadowOffsetX";
+  [@bs.set] external shadowOffsetXSet: (t, int) => unit = "shadowOffsetX";
+
+  [@bs.get] external shadowOffsetYGet: t => int = "shadowOffsetY";
+  [@bs.set] external shadowOffsetYSet: (t, int) => unit = "shadowOffsetY";
+
+  [@bs.get] external shadowColorGet: t => string = "shadowColor";
+  [@bs.set] external shadowColorSet: (t, string) => unit = "shadowColor";
+
   [@bs.get] external lineWidthGet: t => int = "lineWidth";
   [@bs.set] external lineWidthSet: (t, int) => unit = "lineWidth";
 
@@ -195,7 +207,7 @@ module CanvasRenderingContext2D = {
   [@bs.send]
   external createPatternFromCanvas': (t, canvas, string) => pattern =
     "createPattern";
-  let createPatternFromImage = (t, canvas, repetion) =>
+  let createPatternFromCanvas = (t, canvas, repetion) =>
     t->createPatternFromCanvas'(canvas, repetion |> repetitionToJs);
 
   [@bs.send] external clearRect: (t, int, int, int, int) => unit = "";
