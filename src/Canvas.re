@@ -65,8 +65,22 @@ module Image = {
   type t;
 };
 
+/* TODO: Set incorrect data types instead of using ints */
 module ImageData = {
   type t;
+  [@bs.get] external dataGet': t => array(int) = "data";
+  let dataGet = t => t->dataGet' |> Array.to_list;
+  [@bs.get] external height: t => int64 = "";
+  [@bs.get] external width: t => int64 = "";
+
+  [@bs.new] [@bs.module "canvas"]
+  external createImageData: (int, int) => t = "ImageData";
+
+  [@bs.new] [@bs.module "canvas"]
+  external createImageDataFromData': (array(int), int, int) => t =
+    "ImageData";
+  let createImageDataFromData = (data, width, height) =>
+    createImageDataFromData'(data |> Array.of_list, width, height);
 };
 
 module CanvasRenderingContext2D = {
