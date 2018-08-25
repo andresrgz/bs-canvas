@@ -1,4 +1,5 @@
 type canvas;
+type htmlCanvasElement;
 
 [@bs.deriving jsConverter]
 type canvasFormat = [ | [@bs.as "svg"] `SVG | [@bs.as "pdf"] `PDF];
@@ -64,6 +65,10 @@ module Image = {
   type t;
 };
 
+module ImageData = {
+  type t;
+};
+
 module CanvasRenderingContext2D = {
   type t;
   /* TODO: Add methods for gradient type */
@@ -109,6 +114,67 @@ module CanvasRenderingContext2D = {
 
   [@bs.get] external lineDashOffsetGet: t => int = "lineDashOffset";
   [@bs.set] external lineDashOffsetSet: (t, int) => unit = "lineDashOffset";
+
+  [@bs.get] external globalAlphaGet: t => float = "globalAlpha";
+  [@bs.set] external globalAlphaSet: (t, float) => unit = "globalAlpha";
+
+  [@bs.get]
+  external imageSmoothingEnabledGet: t => bool = "imageSmoothingEnabled";
+  [@bs.set]
+  external imageSmoothingEnabledSet: (t, bool) => unit =
+    "imageSmoothingEnabled";
+
+  [@bs.deriving jsConverter]
+  type globalCompositeOperation = [
+    | [@bs.as "source-over"] `sourceOver
+    | [@bs.as "source-in"] `sourceIn
+    | [@bs.as "source-out"] `sourceOut
+    | [@bs.as "source-atop"] `sourceAtop
+    | [@bs.as "destination-over"] `destinationOver
+    | [@bs.as "destination-in"] `destinationIn
+    | [@bs.as "destination-out"] `destinationOut
+    | [@bs.as "destination-atop"] `destinationAtop
+    | `lighter
+    | `copy
+    | `xor
+    | `multiply
+    | `screen
+    | `overlay
+    | `darken
+    | `lighten
+    | [@bs.as "color-dodge"] `colorDodge
+    | [@bs.as "color-burn"] `colorBurn
+    | [@bs.as "hard-light"] `hardLight
+    | [@bs.as "soft-light"] `softLight
+    | `difference
+    | `exclusion
+    | `hue
+    | `saturation
+    | `color
+    | `luminosity
+    | [@bs.as "hsl-hue"] `hslHue
+    | [@bs.as "hsl-saturation"] `hslSaturation
+    | [@bs.as "hsl-color"] `hslColor
+    | [@bs.as "hsl-luminosity"] `hslLuminosity
+    | `unknown
+  ];
+
+  [@bs.get]
+  external globalCompositeOperationGet': t => string =
+    "globalCompositeOperation";
+  let globalCompositeOperationGet = t =>
+    switch (t->globalCompositeOperationGet' |> globalCompositeOperationFromJs) {
+    | Some(globalCompositeOperation) => globalCompositeOperation
+    | None => `unknown
+    };
+  [@bs.set]
+  external globalCompositeOperationSet': (t, string) => unit =
+    "globalCompositeOperation";
+  let globalCompositeOperationSet = (t, globalCompositeOperation) =>
+    t
+    ->globalCompositeOperationSet'(
+        globalCompositeOperation |> globalCompositeOperationToJs,
+      );
 
   [@bs.send] external getLineDash': t => array(int) = "";
   let getLineDash = t => t->getLineDash' |> Array.to_list;
@@ -210,6 +276,44 @@ module CanvasRenderingContext2D = {
   let createPatternFromCanvas = (t, canvas, repetion) =>
     t->createPatternFromCanvas'(canvas, repetion |> repetitionToJs);
 
+  [@bs.deriving jsConverter]
+  type patternQuality = [ | `fast | `good | `best | `unknown];
+  [@bs.get] external patternQualityGet': t => string = "patternQuality";
+  let patternQualityGet = t =>
+    switch (t->patternQualityGet' |> patternQualityFromJs) {
+    | Some(patternQuality) => patternQuality
+    | None => `unknown
+    };
+  [@bs.set]
+  external patternQualitySet': (t, string) => unit = "patternQuality";
+  let patternQualitySet = (t, patternQuality) =>
+    t->patternQualitySet'(patternQuality |> patternQualityToJs);
+
+  [@bs.deriving jsConverter]
+  type textDrawingMode = [ | `path | `glyph | `unknown];
+  [@bs.get] external textDrawingModeGet': t => string = "textDrawingMode";
+  let textDrawingModeGet = t =>
+    switch (t->textDrawingModeGet' |> textDrawingModeFromJs) {
+    | Some(textDrawingMode) => textDrawingMode
+    | None => `unknown
+    };
+  [@bs.set]
+  external textDrawingModeSet': (t, string) => unit = "textDrawingMode";
+  let textDrawingModeSet = (t, textDrawingMode) =>
+    t->textDrawingModeSet'(textDrawingMode |> textDrawingModeToJs);
+
+  [@bs.deriving jsConverter]
+  type antialias = [ | `default | `none | `gray | `subpixel | `unknown];
+  [@bs.get] external antialiasGet': t => string = "antialias";
+  let antialiasGet = t =>
+    switch (t->antialiasGet' |> antialiasFromJs) {
+    | Some(antialias) => antialias
+    | None => `unknown
+    };
+  [@bs.set] external antialiasSet': (t, string) => unit = "antialias";
+  let antialiasSet = (t, antialias) =>
+    t->antialiasSet'(antialias |> antialiasToJs);
+
   [@bs.send] external clearRect: (t, int, int, int, int) => unit = "";
   [@bs.send] external fillRect: (t, int, int, int, int) => unit = "";
   [@bs.send] external strokeRect: (t, int, int, int, int) => unit = "";
@@ -220,6 +324,68 @@ module CanvasRenderingContext2D = {
   external strokeText: (t, string, int, int, ~maxWidth: int=?, unit) => unit =
     "";
   [@bs.send] external measureText: (t, string) => TextMetrics.t = "";
+  [@bs.send] external beginPath: t => unit = "";
+  [@bs.send] external closePath: t => unit = "";
+  [@bs.send] external moveTo: (t, int, int) => unit = "";
+  [@bs.send] external lineTo: (t, int, int) => unit = "";
+  [@bs.send] external quadraticCurveTo: (t, int, int, int, int) => unit = "";
+  [@bs.send]
+  external bezierCurveTo: (t, int, int, int, int, int, int) => unit = "";
+  [@bs.send]
+  external arc:
+    (t, int, int, int, int, int, ~anticlockwise: bool=?, unit) => unit =
+    "";
+  [@bs.send] external arcTo: (t, int, int, int, int, int) => unit = "";
+  [@bs.send] external rect: (t, int, int, int, int) => unit = "";
+  [@bs.send] external fill: t => unit = "";
+  [@bs.send] external stroke: t => unit = "";
+  [@bs.send] external clip: t => unit = "";
+  [@bs.send] external isPointInPath: (t, int, int) => bool = "";
+  [@bs.send] external rotate: (t, int) => unit = "";
+  [@bs.send] external scale: (t, int, int) => unit = "";
+  [@bs.send] external translate: (t, int, int) => unit = "";
+  [@bs.send]
+  external transform: (t, int, int, int, int, int, int) => unit = "";
+  [@bs.send]
+  external setTransform: (t, int, int, int, int, int, int) => unit = "";
+  [@bs.send] external resetTransform: t => unit = "";
+
+  [@bs.send] external drawImage: (t, Image.t, int, int) => unit = "";
+  [@bs.send]
+  external drawImageDst: (t, Image.t, int, int, int, int) => unit =
+    "drawImage";
+  [@bs.send]
+  external drawImageSrcDst:
+    (t, Image.t, int, int, int, int, int, int, int, int) => unit =
+    "drawImage";
+
+  [@bs.send] external drawCanvas: (t, canvas, int, int) => unit = "drawImage";
+  [@bs.send]
+  external drawCanvasDst: (t, canvas, int, int, int, int) => unit =
+    "drawImage";
+  [@bs.send]
+  external drawCanvasSrcDst:
+    (t, canvas, int, int, int, int, int, int, int, int) => unit =
+    "drawImage";
+
+  [@bs.send] external createImageData: (t, int, int) => ImageData.t = "";
+  [@bs.send]
+  external createFromImageData: (t, ImageData.t) => ImageData.t =
+    "createImageData";
+  [@bs.send]
+  external getImageData: (t, int, int, int, int) => ImageData.t = "";
+  [@bs.send] external putImageData: (t, ImageData.t, int, int) => unit = "";
+  [@bs.send]
+  external putImageDataDirty:
+    (t, ImageData.t, int, int, int, int, int, int) => unit =
+    "";
+
+  [@bs.send] external save: t => unit = "";
+  [@bs.send] external restore: t => unit = "";
+
+  [@bs.get]
+  external canvasGet': t => Js.Nullable.t(htmlCanvasElement) = "canvas";
+  let canvasGet = t => t->canvasGet' |> Js.Nullable.toOption;
 };
 
 [@bs.send] external getContext': (canvas, string) => 'a = "";
