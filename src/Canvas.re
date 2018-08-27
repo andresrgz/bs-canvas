@@ -52,7 +52,7 @@ type imageFormat = [
 [@bs.send]
 external toDataURL':
   (t, ~type_: string=?, ~encoderOptions: float=?, unit) => string =
-  "";
+  "toDataURL";
 let toDataURL = (canvas, ~type_=?, ~encoderOptions=?, ()) =>
   switch (type_) {
   | Some(type_) =>
@@ -445,7 +445,7 @@ external drawCanvasSrcDst:
   unit =
   "drawImage";
 
-[@bs.send] external getContext': (t, string) => 'a = "";
+[@bs.send] external getContext': (t, string) => 'a = "getContext";
 let getContext = (canvas, contextType) =>
   canvas->getContext'(contextType |> renderingContextToJs);
 let getCanvasRenderingContext2D = canvas: CanvasRenderingContext2D.t =>
