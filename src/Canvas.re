@@ -45,6 +45,9 @@ type imageFormat = [
   | [@bs.as "image/jpeg"] `JPEG
 ];
 
+[@bs.get] external widthGet: t => float = "width";
+[@bs.get] external heightGet: t => float = "height";
+
 /* TODO: Add binding for async toDataURL */
 [@bs.send]
 external toDataURL':
