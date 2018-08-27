@@ -8,6 +8,7 @@ Currently, only bindings for the latest 1.x version are available.
 
 # :memo: To Do
 - Add bindings for node-canvas 2.0.0.
+- Add interface file to hide internal functions.
 - Add bindings for all possible forms of `toBuffer` function.
 - Add binding for async `toDataURL`.
 - Add data modes to the `Image` module.
