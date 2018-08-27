@@ -2,9 +2,12 @@
 
 BuckleScript bindings for [node-canvas](https://github.com/Automattic/node-canvas).
 
+Currently, only bindings for the latest 1.x version are available.
+
 :warning: _Not all bindings have been tested. If you find a problem please file an issue. PRs are also welcome!_ :warning:
 
 # :memo: To Do
+- Add bindings for node-canvas 2.0.0.
 - Add bindings for all possible forms of `toBuffer` function.
 - Add binding for async `toDataURL`.
 - Add data modes to the `Image` module.
