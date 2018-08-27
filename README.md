@@ -11,6 +11,7 @@ BuckleScript bindings for [node-canvas](https://github.com/Automattic/node-canva
 - Set correct data types in the `ImageData` module instead of using `int` and `int64`.
 - Add methods for gradient type.
 - Add methods for pattern type.
+- Prepare for publishing to redex.
 - Add usage examples.
 - Add tests.
 
