@@ -370,7 +370,7 @@ module CanvasRenderingContext2D = {
   [@bs.send] external fill: t => unit = "";
   [@bs.send] external stroke: t => unit = "";
   [@bs.send] external clip: t => unit = "";
-  [@bs.send] external isPofloatInPath: (t, float, float) => bool = "";
+  [@bs.send] external isPointInPath: (t, float, float) => bool = "";
   [@bs.send] external rotate: (t, float) => unit = "";
   [@bs.send] external scale: (t, float, float) => unit = "";
   [@bs.send] external translate: (t, float, float) => unit = "";
