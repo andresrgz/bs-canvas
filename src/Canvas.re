@@ -293,11 +293,6 @@ module CanvasRenderingContext2D = {
     "createPattern";
   let createPatternFromImage = (t, image, repetion) =>
     t->createPatternFromImage'(image, repetion |> repetitionToJs);
-  [@bs.send]
-  external createPatternFromCanvas': (t, t, string) => pattern =
-    "createPattern";
-  let createPatternFromCanvas = (t, canvas, repetion) =>
-    t->createPatternFromCanvas'(canvas, repetion |> repetitionToJs);
 
   [@bs.deriving jsConverter]
   type patternQuality = [ | `fast | `good | `best | `unknown];
@@ -391,15 +386,6 @@ module CanvasRenderingContext2D = {
     unit =
     "drawImage";
 
-  [@bs.send] external drawCanvas: (t, t, float, float) => unit = "drawImage";
-  [@bs.send]
-  external drawCanvasDst: (t, t, float, float, float, float) => unit =
-    "drawImage";
-  [@bs.send]
-  external drawCanvasSrcDst:
-    (t, t, float, float, float, float, float, float, float, float) => unit =
-    "drawImage";
-
   [@bs.send] external createImageData: (t, float, float) => ImageData.t = "";
   [@bs.send]
   external createFromImageData: (t, ImageData.t) => ImageData.t =
@@ -420,6 +406,41 @@ module CanvasRenderingContext2D = {
   external canvasGet': t => Js.Nullable.t(htmlCanvasElement) = "canvas";
   let canvasGet = t => t->canvasGet' |> Js.Nullable.toOption;
 };
+
+[@bs.send]
+external createPatternFromCanvas':
+  (CanvasRenderingContext2D.t, t, string) => CanvasRenderingContext2D.pattern =
+  "createPattern";
+let createPatternFromCanvas = (t, canvas, repetion) =>
+  t
+  ->createPatternFromCanvas'(
+      canvas,
+      repetion |> CanvasRenderingContext2D.repetitionToJs,
+    );
+
+[@bs.send]
+external drawCanvas: (CanvasRenderingContext2D.t, t, float, float) => unit =
+  "drawImage";
+[@bs.send]
+external drawCanvasDst:
+  (CanvasRenderingContext2D.t, t, float, float, float, float) => unit =
+  "drawImage";
+[@bs.send]
+external drawCanvasSrcDst:
+  (
+    CanvasRenderingContext2D.t,
+    t,
+    float,
+    float,
+    float,
+    float,
+    float,
+    float,
+    float,
+    float
+  ) =>
+  unit =
+  "drawImage";
 
 [@bs.send] external getContext': (t, string) => 'a = "";
 let getContext = (canvas, contextType) =>
