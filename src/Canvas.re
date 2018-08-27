@@ -73,7 +73,7 @@ module Image = {
     "Image";
 };
 
-/* TODO: Set incorrect data types instead of using floats */
+/* TODO: Set correct data types instead of using floats */
 module ImageData = {
   type t;
   [@bs.get] external dataGet': t => array(float) = "data";
