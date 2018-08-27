@@ -1,4 +1,4 @@
-type canvas;
+type t;
 type htmlCanvasElement;
 
 [@bs.deriving jsConverter]
@@ -6,7 +6,7 @@ type canvasFormat = [ | [@bs.as "svg"] `SVG | [@bs.as "pdf"] `PDF];
 
 [@bs.new] [@bs.module]
 external createCanvas':
-  (~width: float=?, ~height: float=?, ~type_: string=?, unit) => canvas =
+  (~width: float=?, ~height: float=?, ~type_: string=?, unit) => t =
   "canvas";
 let createCanvas = (~width=?, ~height=?, ~type_=?, ()) =>
   switch (type_) {
@@ -29,16 +29,15 @@ type jpegStreamOptions = {
   progressive: bool,
 };
 
-[@bs.send] external pngStream: canvas => pngStream = "";
+[@bs.send] external pngStream: t => pngStream = "";
 [@bs.send]
-external jpegStream:
-  (canvas, ~options: jpegStreamOptions=?, unit) => jpegStream =
+external jpegStream: (t, ~options: jpegStreamOptions=?, unit) => jpegStream =
   "";
-[@bs.send] external pdfStream: canvas => pdfStream = "";
+[@bs.send] external pdfStream: t => pdfStream = "";
 
 /* TODO: Add bindings for all possible forms of toBuffer function */
 type buffer;
-[@bs.send] external toBuffer: canvas => buffer = "";
+[@bs.send] external toBuffer: t => buffer = "";
 
 [@bs.deriving jsConverter]
 type imageFormat = [
@@ -49,7 +48,7 @@ type imageFormat = [
 /* TODO: Add binding for async toDataURL */
 [@bs.send]
 external toDataURL':
-  (canvas, ~type_: string=?, ~encoderOptions: float=?, unit) => string =
+  (t, ~type_: string=?, ~encoderOptions: float=?, unit) => string =
   "";
 let toDataURL = (canvas, ~type_=?, ~encoderOptions=?, ()) =>
   switch (type_) {
@@ -295,7 +294,7 @@ module CanvasRenderingContext2D = {
   let createPatternFromImage = (t, image, repetion) =>
     t->createPatternFromImage'(image, repetion |> repetitionToJs);
   [@bs.send]
-  external createPatternFromCanvas': (t, canvas, string) => pattern =
+  external createPatternFromCanvas': (t, t, string) => pattern =
     "createPattern";
   let createPatternFromCanvas = (t, canvas, repetion) =>
     t->createPatternFromCanvas'(canvas, repetion |> repetitionToJs);
@@ -392,14 +391,13 @@ module CanvasRenderingContext2D = {
     unit =
     "drawImage";
 
+  [@bs.send] external drawCanvas: (t, t, float, float) => unit = "drawImage";
   [@bs.send]
-  external drawCanvas: (t, canvas, float, float) => unit = "drawImage";
-  [@bs.send]
-  external drawCanvasDst: (t, canvas, float, float, float, float) => unit =
+  external drawCanvasDst: (t, t, float, float, float, float) => unit =
     "drawImage";
   [@bs.send]
   external drawCanvasSrcDst:
-    (t, canvas, float, float, float, float, float, float, float, float) => unit =
+    (t, t, float, float, float, float, float, float, float, float) => unit =
     "drawImage";
 
   [@bs.send] external createImageData: (t, float, float) => ImageData.t = "";
@@ -423,7 +421,7 @@ module CanvasRenderingContext2D = {
   let canvasGet = t => t->canvasGet' |> Js.Nullable.toOption;
 };
 
-[@bs.send] external getContext': (canvas, string) => 'a = "";
+[@bs.send] external getContext': (t, string) => 'a = "";
 let getContext = (canvas, contextType) =>
   canvas->getContext'(contextType |> renderingContextToJs);
 let getCanvasRenderingContext2D = canvas: CanvasRenderingContext2D.t =>
