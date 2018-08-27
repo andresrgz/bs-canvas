@@ -73,19 +73,19 @@ module Image = {
     "Image";
 };
 
-/* TODO: Set correct data types instead of using floats */
+/* TODO: Set correct data types instead of using ints */
 module ImageData = {
   type t;
-  [@bs.get] external dataGet': t => array(float) = "data";
+  [@bs.get] external dataGet': t => array(int) = "data";
   let dataGet = t => t->dataGet' |> Array.to_list;
   [@bs.get] external height: t => int64 = "";
   [@bs.get] external width: t => int64 = "";
 
   [@bs.new] [@bs.module "canvas"]
-  external createImageData: (int, float) => t = "ImageData";
+  external createImageData: (int64, int64) => t = "ImageData";
 
   [@bs.new] [@bs.module "canvas"]
-  external createImageDataFromData': (array(float), float, float) => t =
+  external createImageDataFromData': (array(int), int64, int64) => t =
     "ImageData";
   let createImageDataFromData = (data, width, height) =>
     createImageDataFromData'(data |> Array.of_list, width, height);
