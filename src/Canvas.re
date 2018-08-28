@@ -36,8 +36,7 @@ external jpegStream: (t, ~options: jpegStreamOptions=?, unit) => jpegStream =
 [@bs.send] external pdfStream: t => pdfStream = "";
 
 /* TODO: Add bindings for all possible forms of toBuffer function */
-type buffer;
-[@bs.send] external toBuffer: t => buffer = "";
+[@bs.send] external toBuffer: t => Node.Buffer.t = "";
 
 [@bs.deriving jsConverter]
 type imageFormat = [
