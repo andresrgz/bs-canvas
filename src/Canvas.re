@@ -7,7 +7,7 @@ type canvasFormat = [ | [@bs.as "svg"] `SVG | [@bs.as "pdf"] `PDF];
 [@bs.new] [@bs.module]
 external createCanvas':
   (~width: float=?, ~height: float=?, ~type_: string=?, unit) => t =
-  "canvas-prebuilt";
+  "canvas";
 let createCanvas = (~width=?, ~height=?, ~type_=?, ()) =>
   switch (type_) {
   | Some(type_) =>
