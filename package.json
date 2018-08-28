@@ -17,6 +17,6 @@
     "bs-platform": "^4.0.5"
   },
   "dependencies": {
-    "canvas": "^1.6.11"
+    "canvas-prebuilt": "^1.6.5-prerelease.1"
   }
 }
