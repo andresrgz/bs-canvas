@@ -29,14 +29,14 @@ type jpegStreamOptions = {
   progressive: bool,
 };
 
-[@bs.send] external pngStream: t => pngStream = "";
+[@bs.send] external pngStream: t => pngStream = "pngStream";
 [@bs.send]
 external jpegStream: (t, ~options: jpegStreamOptions=?, unit) => jpegStream =
-  "";
-[@bs.send] external pdfStream: t => pdfStream = "";
+  "jpegStream";
+[@bs.send] external pdfStream: t => pdfStream = "pdfStream";
 
 /* TODO: Add bindings for all possible forms of toBuffer function */
-[@bs.send] external toBuffer: t => Node.Buffer.t = "";
+[@bs.send] external toBuffer: t => Node.Buffer.t = "toBuffer";
 
 [@bs.deriving jsConverter]
 type imageFormat = [
@@ -79,8 +79,8 @@ module ImageData = {
   type t;
   [@bs.get] external dataGet': t => array(int) = "data";
   let dataGet = t => t->dataGet' |> Array.to_list;
-  [@bs.get] external height: t => int64 = "";
-  [@bs.get] external width: t => int64 = "";
+  [@bs.get] external height: t => int64 = "height";
+  [@bs.get] external width: t => int64 = "width";
 
   [@bs.new] [@bs.module "canvas"]
   external createImageData: (int64, int64) => t = "ImageData";
@@ -194,14 +194,14 @@ module CanvasRenderingContext2D = {
   external globalCompositeOperationSet': (t, string) => unit =
     "globalCompositeOperation";
   let globalCompositeOperationSet = (t, globalCompositeOperation) =>
-    t
-    ->globalCompositeOperationSet'(
-        globalCompositeOperation |> globalCompositeOperationToJs,
-      );
+    t->globalCompositeOperationSet'(
+      globalCompositeOperation |> globalCompositeOperationToJs,
+    );
 
-  [@bs.send] external getLineDash': t => array(float) = "";
+  [@bs.send] external getLineDash': t => array(float) = "getLineDash'";
   let getLineDash = t => t->getLineDash' |> Array.to_list;
-  [@bs.send] external setLineDash': (t, array(float)) => unit = "";
+  [@bs.send]
+  external setLineDash': (t, array(float)) => unit = "setLineDash'";
   let setLineDash = (t, segments) =>
     t->setLineDash'(segments |> Array.of_list);
 
@@ -277,11 +277,11 @@ module CanvasRenderingContext2D = {
 
   [@bs.send]
   external createLinearGradient: (t, float, float, float, float) => gradient =
-    "";
+    "createLinearGradient";
   [@bs.send]
   external createRadialGradient:
     (t, float, float, float, float, float, float) => gradient =
-    "";
+    "createRadialGradient";
 
   [@bs.deriving jsConverter]
   type repetition = [
@@ -334,51 +334,58 @@ module CanvasRenderingContext2D = {
   let antialiasSet = (t, antialias) =>
     t->antialiasSet'(antialias |> antialiasToJs);
 
-  [@bs.send] external clearRect: (t, float, float, float, float) => unit = "";
-  [@bs.send] external fillRect: (t, float, float, float, float) => unit = "";
-  [@bs.send] external strokeRect: (t, float, float, float, float) => unit = "";
+  [@bs.send]
+  external clearRect: (t, float, float, float, float) => unit = "clearRect";
+  [@bs.send]
+  external fillRect: (t, float, float, float, float) => unit = "fillRect";
+  [@bs.send]
+  external strokeRect: (t, float, float, float, float) => unit = "strokeRect";
   [@bs.send]
   external fillText:
     (t, string, float, float, ~maxWidth: float=?, unit) => unit =
-    "";
+    "fillText";
   [@bs.send]
   external strokeText:
     (t, string, float, float, ~maxWidth: float=?, unit) => unit =
-    "";
-  [@bs.send] external measureText: (t, string) => TextMetrics.t = "";
-  [@bs.send] external beginPath: t => unit = "";
-  [@bs.send] external closePath: t => unit = "";
-  [@bs.send] external moveTo: (t, float, float) => unit = "";
-  [@bs.send] external lineTo: (t, float, float) => unit = "";
+    "strokeText";
   [@bs.send]
-  external quadraticCurveTo: (t, float, float, float, float) => unit = "";
+  external measureText: (t, string) => TextMetrics.t = "measureText";
+  [@bs.send] external beginPath: t => unit = "beginPath";
+  [@bs.send] external closePath: t => unit = "closePath";
+  [@bs.send] external moveTo: (t, float, float) => unit = "moveTo";
+  [@bs.send] external lineTo: (t, float, float) => unit = "lineToo";
+  [@bs.send]
+  external quadraticCurveTo: (t, float, float, float, float) => unit =
+    "quadraticCurveTo";
   [@bs.send]
   external bezierCurveTo: (t, float, float, float, float, float, float) => unit =
-    "";
+    "bezierCurveTo";
   [@bs.send]
   external arc:
     (t, float, float, float, float, float, ~anticlockwise: bool=?, unit) =>
     unit =
-    "";
+    "arc";
   [@bs.send]
-  external arcTo: (t, float, float, float, float, float) => unit = "";
-  [@bs.send] external rect: (t, float, float, float, float) => unit = "";
-  [@bs.send] external fill: t => unit = "";
-  [@bs.send] external stroke: t => unit = "";
-  [@bs.send] external clip: t => unit = "";
-  [@bs.send] external isPointInPath: (t, float, float) => bool = "";
-  [@bs.send] external rotate: (t, float) => unit = "";
-  [@bs.send] external scale: (t, float, float) => unit = "";
-  [@bs.send] external translate: (t, float, float) => unit = "";
+  external arcTo: (t, float, float, float, float, float) => unit = "arcTo";
+  [@bs.send] external rect: (t, float, float, float, float) => unit = "rect";
+  [@bs.send] external fill: t => unit = "fill";
+  [@bs.send] external stroke: t => unit = "stroke";
+  [@bs.send] external clip: t => unit = "clip`";
+  [@bs.send]
+  external isPointInPath: (t, float, float) => bool = "isPointInPath";
+  [@bs.send] external rotate: (t, float) => unit = "rotate";
+  [@bs.send] external scale: (t, float, float) => unit = "scale";
+  [@bs.send] external translate: (t, float, float) => unit = "translate";
   [@bs.send]
   external transform: (t, float, float, float, float, float, float) => unit =
-    "";
+    "transform";
   [@bs.send]
   external setTransform: (t, float, float, float, float, float, float) => unit =
-    "";
-  [@bs.send] external resetTransform: t => unit = "";
+    "setTransform";
+  [@bs.send] external resetTransform: t => unit = "resetTransform";
 
-  [@bs.send] external drawImage: (t, Image.t, float, float) => unit = "";
+  [@bs.send]
+  external drawImage: (t, Image.t, float, float) => unit = "drawImage";
   [@bs.send]
   external drawImageDst: (t, Image.t, float, float, float, float) => unit =
     "drawImage";
@@ -388,21 +395,25 @@ module CanvasRenderingContext2D = {
     unit =
     "drawImage";
 
-  [@bs.send] external createImageData: (t, float, float) => ImageData.t = "";
+  [@bs.send]
+  external createImageData: (t, float, float) => ImageData.t =
+    "createImageData";
   [@bs.send]
   external createFromImageData: (t, ImageData.t) => ImageData.t =
     "createImageData";
   [@bs.send]
-  external getImageData: (t, float, float, float, float) => ImageData.t = "";
+  external getImageData: (t, float, float, float, float) => ImageData.t =
+    "getImageData";
   [@bs.send]
-  external putImageData: (t, ImageData.t, float, float) => unit = "";
+  external putImageData: (t, ImageData.t, float, float) => unit =
+    "putImageData";
   [@bs.send]
   external putImageDataDirty:
     (t, ImageData.t, float, float, float, float, float, float) => unit =
-    "";
+    "putImageDataDirty";
 
-  [@bs.send] external save: t => unit = "";
-  [@bs.send] external restore: t => unit = "";
+  [@bs.send] external save: t => unit = "save";
+  [@bs.send] external restore: t => unit = "restore";
 
   [@bs.get]
   external canvasGet': t => Js.Nullable.t(htmlCanvasElement) = "canvas";
@@ -414,11 +425,10 @@ external createPatternFromCanvas':
   (CanvasRenderingContext2D.t, t, string) => CanvasRenderingContext2D.pattern =
   "createPattern";
 let createPatternFromCanvas = (t, canvas, repetion) =>
-  t
-  ->createPatternFromCanvas'(
-      canvas,
-      repetion |> CanvasRenderingContext2D.repetitionToJs,
-    );
+  t->createPatternFromCanvas'(
+    canvas,
+    repetion |> CanvasRenderingContext2D.repetitionToJs,
+  );
 
 [@bs.send]
 external drawCanvas: (CanvasRenderingContext2D.t, t, float, float) => unit =
@@ -447,5 +457,5 @@ external drawCanvasSrcDst:
 [@bs.send] external getContext': (t, string) => 'a = "getContext";
 let getContext = (canvas, contextType) =>
   canvas->getContext'(contextType |> renderingContextToJs);
-let getCanvasRenderingContext2D = canvas: CanvasRenderingContext2D.t =>
+let getCanvasRenderingContext2D = (canvas): CanvasRenderingContext2D.t =>
   canvas->getContext(`CanvasRenderingContext2D);
